@@ -3,6 +3,7 @@ package main
 import (
 	"golang-server/database"
 	"golang-server/internal/user"
+	"golang-server/router"
 	"log"
 )
 
@@ -15,4 +16,7 @@ func main() {
 	userRepository := user.NewRepository(dbConnection.GetDatabase())
 	userService := user.NewService(userRepository)
 	userHandler := user.NewHandler(userService)
+
+	router.InitRouter(userHandler)
+	router.Start("0.0.0.0:8080")
 }
