@@ -11,6 +11,12 @@ type User struct {
 
 type Repository interface {
 	CreateUser(ctx context.Context, user *User) (*User, error)
+	GetUserByEmail(ctx context.Context, email string) (*User, error)
+}
+
+type Service interface {
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	LoginService(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 }
 
 type CreateUserRequest struct {
@@ -25,6 +31,14 @@ type CreateUserResponse struct {
 	Email    string `json:"email" db:"email"`
 }
 
-type Service interface {
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+type LoginUserRequest struct {
+	Email string `json:"email" db:"email"`
+	Password string `json:"password" db:"password"`
 }
+
+type LoginUserResponse struct {
+	accessToken string
+	ID string `json:"id" db:"id"`
+	Username string `json:"username" db:"username"`
+}
+

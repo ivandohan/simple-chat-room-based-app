@@ -32,3 +32,32 @@ func (h *Handler) CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *Handler) Login(c *gin.Context) {
+	var userRequest LoginUserRequest
+
+	if err := c.ShouldBindJSON(&userRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	currentUser, err := h.Service.LoginService(c.Request.Context(), &userRequest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.SetCookie("login-jwt", currentUser.accessToken, 3600, "/", "localhost", false, true)
+
+	response := &LoginUserResponse{
+		Username: currentUser.Username,
+		ID: currentUser.ID,
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *Handler) Logout(c *gin.Context) {
+	c.SetCookie("login-jwt", "", -1, "", "", false, true)
+	c.JSON(http.StatusOK, gin.H{"message": "logout successful"})
+}
