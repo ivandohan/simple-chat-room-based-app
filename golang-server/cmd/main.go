@@ -20,6 +20,7 @@ func main() {
 
 	socketHub := socket.NewHub()
 	socketHandler := socket.NewHandler(socketHub)
+	go socketHub.Run()
 
 	router.InitRouter(userHandler, socketHandler)
 	router.Start("0.0.0.0:8080")
