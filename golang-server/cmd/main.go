@@ -2,6 +2,7 @@ package main
 
 import (
 	"golang-server/database"
+	"golang-server/internal/socket"
 	"golang-server/internal/user"
 	"golang-server/router"
 	"log"
@@ -17,6 +18,9 @@ func main() {
 	userService := user.NewService(userRepository)
 	userHandler := user.NewHandler(userService)
 
-	router.InitRouter(userHandler)
+	socketHub := socket.NewHub()
+	socketHandler := socket.NewHandler(socketHub)
+
+	router.InitRouter(userHandler, socketHandler)
 	router.Start("0.0.0.0:8080")
 }
