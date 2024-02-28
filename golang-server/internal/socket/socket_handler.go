@@ -80,3 +80,5 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 	go client.writeMessage()
 	client.readMessage(h.hub)
 }
+
+func (h *Handler) GetRoom(c *gin.Context) {}
