@@ -13,7 +13,13 @@ createdb:
 dropdb:
 	docker exec -it postgres15 dropdb chat-room-app
 
-migrate-postgres:
+migrate-init:
+	migrate create -ext sql -dir database/migrations/ -seq init_migration
+
+migrate-up:
 	sudo migrate -path database/migrations/ -database postgresql://root:password@localhost:5433/chat-room-app?sslmode=disable -verbose up
 
-.PHONY: postgresinit postgresinit-L postgres createdb dropdb migrate-postgres
+migrate-rollback:
+	sudo migrate -path database/migrations/ -database postgresql://root:password@localhost:5433/chat-room-app?sslmode=disable -verbose down
+
+.PHONY: postgresinit postgresinit-L postgres createdb dropdb migrate-init migrate-up migrate-rollback
